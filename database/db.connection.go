@@ -24,7 +24,7 @@ func ConnectDB() *mongo.Client {
 		log.Fatal(err)
 	}
 
-	fmt.Println("success connect to database...")
+	fmt.Println("Successfully Connected To Database...")
 
 	mongoClient = client
 
@@ -37,15 +37,17 @@ func DisconnectDB() error {
 		log.Fatal(err)
 	}
 
-	fmt.Println("closed connection from database...")
+	fmt.Println("Connection to Database is closed...")
 
 	return nil
 }
 
-func GetDB() *mongo.Client {
-	return mongoClient
+func GetCollection(client *mongo.Client, name string) *mongo.Collection { // Mengubah nama fungsi menjadi GetCollection
+	coll := client.Database(config.ConfigDBname()).Collection(name)
+
+	return coll
 }
 
-func GetCollection(client *mongo.Client, name string) *mongo.Collection {
-	return client.Database(config.ConfigDBname()).Collection(name)
+func GetDB() *mongo.Client {
+	return mongoClient
 }

@@ -9,6 +9,7 @@ import (
 
 	"github.com/Data-Alchemist/doculex-api/config"
 	"github.com/Data-Alchemist/doculex-api/database"
+	"github.com/Data-Alchemist/doculex-api/routes"
 )
 
 func main() {
@@ -19,8 +20,14 @@ func main() {
 
 	app.Use(logger.New()) //add logger to track http request 
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello World!")
+	routes.SetupEndpoint(app)
+
+	//add setup handler for false routes
+	app.Use(func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "404 Not Found",
+			"status": fiber.StatusNotFound,
+		})
 	})
 
 	host := config.ConfigHost()
