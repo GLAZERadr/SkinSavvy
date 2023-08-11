@@ -25,6 +25,7 @@ User.http
 
 # Go workspace file
 go.work
+tmp/
 
 # Environment variables files
 .env
