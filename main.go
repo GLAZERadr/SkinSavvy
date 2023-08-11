@@ -8,10 +8,14 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 
 	"github.com/Data-Alchemist/doculex-api/config"
+	"github.com/Data-Alchemist/doculex-api/database"
 )
 
 func main() {
 	app := fiber.New() //initialize the server
+
+	database.ConnectDB() //connect to database
+	defer database.DisconnectDB() //disconnect from database
 
 	app.Use(logger.New()) //add logger to track http request 
 

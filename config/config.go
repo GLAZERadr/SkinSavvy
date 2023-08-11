@@ -37,6 +37,15 @@ func ConfigDB() string {
 	return os.Getenv("DATABASE_URL")
 }
 
+func ConfigDBname() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv("DATABASE_NAME")
+}
+
 //function to take openai api key value from .env file
 func ConfigOpenAI() string {
 	err := godotenv.Load()
