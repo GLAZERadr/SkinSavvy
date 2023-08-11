@@ -2,9 +2,12 @@ package main
 
 import (
 	"log"
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	// "github.com/joho/godotenv"
+
+	"github.com/Data-Alchemist/doculex-api/config"
 )
 
 func main() {
@@ -16,7 +19,12 @@ func main() {
 		return c.SendString("Hello World!")
 	})
 
-	err := app.Listen("localhost:3000")
+	host := config.ConfigHost()
+	port := config.ConfigPort()
+
+	fmt.Println("\nServer is running on", host + ":" + port)
+
+	err := app.Listen(host + ":" + port)
 	if err != nil {
 		log.Fatal(err)
 	}

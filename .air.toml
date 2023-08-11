@@ -1,0 +1,12 @@
+[build]
+exclude_dir = ["public", "assets"]
+exclude_file = ["README.md", "LICENSE", ".gitignore", ".env.example"]
+
+[log]
+format = "time"
+
+[master]
+watch_ext = ["go"]
+
+[hot_reload]
+watch_folder = ["app", "config", "routes", "database", "models", "controllers"]
