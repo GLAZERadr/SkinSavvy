@@ -9,4 +9,4 @@ format = "time"
 watch_ext = ["go"]
 
 [hot_reload]
-watch_folder = ["app", "config", "routes", "database", "models", "controllers"]
+watch_folder = ["app", "config", "routes", "database", "models", "controllers", "local"]

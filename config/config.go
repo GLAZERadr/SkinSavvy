@@ -55,3 +55,13 @@ func ConfigOpenAI() string {
 
 	return os.Getenv("OPENAI_API_KEY")
 }
+
+//function to take jwt key value from .env file
+func ConfigJWTkey() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv("JWT_KEY")
+}

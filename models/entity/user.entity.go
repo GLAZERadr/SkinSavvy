@@ -9,7 +9,7 @@ import (
 type User struct {
 	ID			primitive.ObjectID  `gorm:"column:id;primaryKey" json:"userID" bson:"_id,omitempty"`
 	Name		string 				`json:"name"`
-	Email		string				`json:"email" gorm:"unique"`
+	Email		string				`json:"email"`
 	Password	string				`json:"password"`
 	CreatedAt	time.Time			`json:"createdAt"`
 	UpdatedAt	time.Time			`json:"updatedAt"`

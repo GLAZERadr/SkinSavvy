@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"time"
 	"context"
 
@@ -17,6 +18,7 @@ import (
 	"github.com/Data-Alchemist/doculex-api/models/entity"
 	"github.com/Data-Alchemist/doculex-api/models/request"
 	"github.com/Data-Alchemist/doculex-api/local"
+	"github.com/Data-Alchemist/doculex-api/middleware"
 )
 
 
@@ -30,10 +32,10 @@ type UserController interface {
 	UserLoginValidator(c *fiber.Ctx) error
 
 	//Put Request
-	// UpdateUserInfo(c *fiber.Ctx) error
+	UpdateUserInfo(c *fiber.Ctx) error
 
-	// //Delete Request
-	// DeleteUserAccount(c *fiber.Ctx) error
+	//Delete Request
+	DeleteUserAccount(c *fiber.Ctx) error
 }
 
 type userController struct {}
@@ -43,6 +45,25 @@ func NewUserController() UserController {
 }
 
 func(controller *userController) GetAllUserAccount(c *fiber.Ctx) error {
+	claims, err := middleware.JWTValidator(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message"	:	"failed to validate jwt token",
+			"status"	:	fiber.StatusUnauthorized,
+			"error"		:	err.Error(),
+		})
+	}
+
+	userID, ok := claims["userID"].(string)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message"	:	"failed to get userID from jwt token",
+			"status"	:	fiber.StatusInternalServerError,
+		})
+	}
+
+	fmt.Println(userID)
+
 	database.ConnectDB()
 	defer database.DisconnectDB()
 
@@ -76,6 +97,25 @@ func(controller *userController) GetAllUserAccount(c *fiber.Ctx) error {
 }
 
 func(controller *userController) GetOneUserAccount(c *fiber.Ctx) error {
+	claims, err := middleware.JWTValidator(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message"	:	"failed to validate jwt token",
+			"status"	:	fiber.StatusUnauthorized,
+			"error"		:	err.Error(),
+		})
+	}
+
+	userID, ok := claims["userID"].(string)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message"	:	"failed to get userID from jwt token",
+			"status"	:	fiber.StatusInternalServerError,
+		})
+	}
+
+	fmt.Println(userID)
+
 	idParam := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idParam)
 	if err != nil {
@@ -134,7 +174,7 @@ func(controller *userController) CreateUserAccount(c *fiber.Ctx) error {
 	collection := database.GetCollection(client, "user")
 
 	//check existing email in database
-	userExist := collection.FindOne(context.Background(), bson.M{"email": request.Email})
+	userExist := collection.FindOne(context.Background(), bson.M{"email": register.Email})
 	if userExist.Err() == nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message"	:	"email already exist",
@@ -153,18 +193,27 @@ func(controller *userController) CreateUserAccount(c *fiber.Ctx) error {
 	}
 
 	user := entity.User{
-		Name		:	request.Name,
-		Email		:	request.Email,
+		Name		:	register.Name,
+		Email		:	register.Email,
 		Password	:	passwordHashed,
 		CreatedAt	:	time.Now(),
 		UpdatedAt	:	time.Now(),
 	}
 	user.ID = primitive.NewObjectID()
 
-	_, err := collection.InsertOne(context.Background(), user)
+	_, err = collection.InsertOne(context.Background(), user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message"	:	"failed to create new user",
+			"status"	:	fiber.StatusInternalServerError,
+			"error"		:	err.Error(),
+		})
+	}
+
+	token, err := middleware.GenerateJWTToken(user.ID.Hex())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message"	:	"failed to generate jwt token",
 			"status"	:	fiber.StatusInternalServerError,
 			"error"		:	err.Error(),
 		})
@@ -174,6 +223,7 @@ func(controller *userController) CreateUserAccount(c *fiber.Ctx) error {
 		"message"	:	"successfully create new user",
 		"status"	:	fiber.StatusOK,
 		"data"		:	user,
+		"token"		:	token,
 	})
 }
 
@@ -196,7 +246,7 @@ func(controller *userController) UserLoginValidator(c *fiber.Ctx) error {
 
 	var user entity.User
 
-	err := collection.FindOne(context.Background(), bson.M{"email": request.Email}).Decode(&user)
+	err := collection.FindOne(context.Background(), bson.M{"email": login.Email}).Decode(&user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -211,10 +261,19 @@ func(controller *userController) UserLoginValidator(c *fiber.Ctx) error {
 		})
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(login.Password)); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message"	:	"invalid password",
 			"status"	:	fiber.StatusBadRequest,
+		})
+	}
+
+	token, err := middleware.GenerateJWTToken(user.ID.Hex())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message"	:	"failed to generate jwt token",
+			"status"	:	fiber.StatusInternalServerError,
+			"error"		:	err.Error(),
 		})
 	}
 
@@ -222,9 +281,144 @@ func(controller *userController) UserLoginValidator(c *fiber.Ctx) error {
 		"message"	:	"success login",
 		"status"	:	fiber.StatusOK,
 		"data"		:	user,
+		"token"		:	token,
 	})
 }
 
-// func(controller *userController) UpdateUserInfo(c *fiber.Ctx) error {}
+func(controller *userController) UpdateUserInfo(c *fiber.Ctx) error {
+	claims, err := middleware.JWTValidator(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message"	:	"failed to validate jwt token",
+			"status"	:	fiber.StatusUnauthorized,
+			"error"		:	err.Error(),
+		})
+	}
 
-// func(controller *userController) DeleteUserAccount(c *fiber.Ctx) error {}
+	userID, ok := claims["userID"].(string)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message"	:	"failed to get userID from jwt token",
+			"status"	:	fiber.StatusInternalServerError,
+		})
+	}
+
+	fmt.Println(userID)
+
+	idParam := c.Params("id")
+	id, err := primitive.ObjectIDFromHex(idParam)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message"	:	"failed to parse user id",
+			"status"	:	fiber.StatusBadRequest,
+			"error"		:	err.Error(),
+		})
+	}
+
+	database.ConnectDB()
+	defer database.DisconnectDB()
+
+	client := database.GetDB()
+	collection := database.GetCollection(client, "user")
+
+	var user request.UserRegister
+
+	if err := c.BodyParser(&user); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message"	:	"failed to parse user update request",
+			"status"	:	fiber.StatusBadRequest,
+			"error"		:	err.Error(),
+		})
+	}
+
+	update := bson.M{"$set":bson.M{}}
+
+	if user.Name != "" {
+		update["$set"].(bson.M)["name"] = user.Name
+	}
+
+	if user.Email != "" {
+		update["$set"].(bson.M)["email"] = user.Email
+	}
+
+	if user.Password != "" {
+		hashedPasswd, _:= bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		update["$set"].(bson.M)["password"] = string(hashedPasswd)
+	}
+
+	if len(update["$set"].(bson.M)) > 0 {
+		update["$set"].(bson.M)["updated"] = time.Now()
+	}
+
+	_, err = collection.UpdateOne(context.TODO(), bson.M{"_id": id}, update)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message"	:	"failed to update user account",
+			"status"	:	fiber.StatusInternalServerError,
+			"error"		:	err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message"	:	"success update user account",
+		"status"	:	fiber.StatusOK,
+	})
+}
+
+func(controller *userController) DeleteUserAccount(c *fiber.Ctx) error {
+	claims, err := middleware.JWTValidator(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message"	:	"failed to validate jwt token",
+			"status"	:	fiber.StatusUnauthorized,
+			"error"		:	err.Error(),
+		})
+	}
+
+	userID, ok := claims["userID"].(string)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message"	:	"failed to get userID from jwt token",
+			"status"	:	fiber.StatusInternalServerError,
+		})
+	}
+
+	fmt.Println(userID)
+
+	idParam := c.Params("id")
+	id, err := primitive.ObjectIDFromHex(idParam)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message"	:	"failed to parse user id",
+			"status"	:	fiber.StatusBadRequest,
+			"error"		:	err.Error(),
+		})
+	}
+
+	database.ConnectDB()
+	defer database.DisconnectDB()
+
+	client := database.GetDB()
+	collection := database.GetCollection(client, "user")
+
+	result, err := collection.DeleteOne(context.Background(), bson.M{"_id": id})
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message"	:	"failed to delete user account",
+			"status"	:	fiber.StatusInternalServerError,
+			"error"		:	err.Error(),
+		})
+	}
+
+	if result.DeletedCount == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message"	:	"user account not found",
+			"status"	:	fiber.StatusNotFound,
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message"	:	"success delete user account",
+		"status"	:	fiber.StatusOK,
+	})
+}

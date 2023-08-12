@@ -11,6 +11,7 @@ import (
 	"github.com/Data-Alchemist/doculex-api/config"
 	"github.com/Data-Alchemist/doculex-api/database"
 	"github.com/Data-Alchemist/doculex-api/routes"
+	"github.com/Data-Alchemist/doculex-api/middleware"
 )
 
 func main() {
@@ -25,9 +26,12 @@ func main() {
 	database.ConnectDB() //connect to database
 	defer database.DisconnectDB() //disconnect from database
 
-	app.Use(logger.New()) //add logger to track http request 
+	app.Use(logger.New()) //add logger to track http request
+	
+	//add middleware
+	jwtMiddleware := middleware.JWTMiddleware()
 
-	routes.SetupEndpoint(app)
+	routes.SetupEndpoint(app, jwtMiddleware)
 
 	//add setup handler for false routes
 	app.Use(func(c *fiber.Ctx) error {
@@ -42,7 +46,7 @@ func main() {
 
 	fmt.Println("\nServer is running on", host + ":" + port)
 
-	err := app.Listen(host + ":" + port)
+	err = app.Listen(host + ":" + port)
 	if err != nil {
 		log.Fatal(err)
 	}
