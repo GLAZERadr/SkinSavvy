@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -13,6 +14,12 @@ import (
 )
 
 func main() {
+	location, err := time.LoadLocation("Asia/Jakarta")
+	if err != nil {
+		log.Fatal(err)
+	}
+	time.Local = location
+
 	app := fiber.New() //initialize the server
 
 	database.ConnectDB() //connect to database
