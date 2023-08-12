@@ -19,4 +19,5 @@ func SetupEndpoint(r *fiber.App) {
 
 	//user endpoint
 	r.Get("doculex-api/v0.1/get/user", userController.GetAllUserAccount)
+	r.Get("doculex-api/v0.1/get/user/:id", userController.GetOneUserAccount)
 }
