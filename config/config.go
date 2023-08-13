@@ -2,7 +2,6 @@ package config
 
 import (
 	"os"
-	"log"
 )
 
 //function to take host value from .env file
