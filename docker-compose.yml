@@ -1,0 +1,17 @@
+version: '3'
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8080"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=mongodb+srv://adrian:utDxGk8kOAHaVD8v@doculex-ai.qudtmz2.mongodb.net/?retryWrites=true&w=majority
+      - DATABASE_NAME=doculex
+      - OPENAI_API_KEY=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
+      - JWT_KEY=9_9x7H*w7LJFm^vM$SvBXn6xP+e*3cB
+      - HOST=localhost
+      - PORT=8000
