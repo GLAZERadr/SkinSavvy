@@ -43,8 +43,6 @@ func main() {
 
 	port := config.ConfigPort()
 
-	fmt.Println("\nServer is running on", host + ":" + port)
-
 	err = app.Listen(":" + port)
 	if err != nil {
 		log.Fatal(err)
