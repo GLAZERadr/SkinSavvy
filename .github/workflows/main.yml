@@ -53,5 +53,5 @@ jobs:
                 port: ${{ secrets.PORT }}
                 script: |
                     docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
-                    DOCKER_HOST=unix:///var/run/docker.sock docker-compose pull
-                    DOCKER_HOST=unix:///var/run/docker.sock docker-compose up -d 
+                    docker compose pull
+                    docker compose up -d 
