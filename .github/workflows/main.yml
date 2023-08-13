@@ -19,6 +19,6 @@ jobs:
                 script: |
                     cd Doculex-API
                     git pull
-                    docker build -t ${{ secrets.DOCKER_USERNAME }}/doculex-ai-api:latest
+                    docker build -t ${{ secrets.DOCKER_USERNAME }}/doculex-ai-api:latest .
                     docker compose down
-                    docker compose up
+                    docker compose up -d
