@@ -41,7 +41,6 @@ func main() {
 		})
 	})
 
-	host := config.ConfigHost()
 	port := config.ConfigPort()
 
 	fmt.Println("\nServer is running on", host + ":" + port)

@@ -11,5 +11,4 @@ services:
       - DATABASE_NAME=doculex
       - OPENAI_API_KEY=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
       - JWT_KEY=9_9x7H*w7LJFm^vM$SvBXn6xP+e*3cB
-      - HOST=localhost
       - PORT=8000
