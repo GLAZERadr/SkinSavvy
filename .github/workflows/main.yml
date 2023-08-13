@@ -9,6 +9,9 @@ jobs:
     release:
         runs-on: ubuntu-latest
         steps:
+            - name: Show GitHub Actor
+              run: echo "GitHub Actor: $GITHUB_ACTOR"
+              
             - name: Checkout Repository
               uses: actions/checkout@v2
 
@@ -53,5 +56,5 @@ jobs:
                 port: ${{ secrets.PORT }}
                 script: |
                     docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
-                    docker-compose pull
-                    docker-compose up -d 
+                    DOCKER_HOST=unix:///var/run/docker.sock docker-compose pull
+                    DOCKER_HOST=unix:///var/run/docker.sock docker-compose up -d 
