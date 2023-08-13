@@ -19,5 +19,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o app .
 # Tandai port 8080 yang akan digunakan oleh aplikasi
 EXPOSE 8080
 
-# Run the Go Fiber application
+# Run the Go Fiber applicatio
 CMD ["./app"]
