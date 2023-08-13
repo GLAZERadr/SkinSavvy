@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
