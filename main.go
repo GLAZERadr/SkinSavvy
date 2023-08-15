@@ -22,6 +22,8 @@ func main() {
 
 	app := fiber.New() //initialize the server
 
+	app.Use(middleware.CORSMiddleware()) //use cors middleware from other directory
+
 	database.ConnectDB() //connect to database
 	defer database.DisconnectDB() //disconnect from database
 

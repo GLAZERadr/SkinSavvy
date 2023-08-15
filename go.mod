@@ -13,16 +13,21 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/aws/aws-sdk-go v1.44.322 // indirect
+	github.com/dlclark/regexp2 v1.8.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/klauspost/compress v1.16.3 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
+	github.com/pkoukk/tiktoken-go v0.1.2 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/tmc/langchaingo v0.0.0-20230811231558-fd8b7f099537 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.48.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
