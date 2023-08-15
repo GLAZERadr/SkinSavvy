@@ -4,6 +4,12 @@ import (
 	"os"
 )
 
+//function to take host value from .env file
+func ConfigHost() string {
+
+	return os.Getenv("HOST")
+}
+
 //function to take port value from .env file
 func ConfigPort() string {
 
