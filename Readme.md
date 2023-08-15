@@ -26,7 +26,7 @@ Doculex AI is a web application that allows users to upload, store, and search f
     4. Port 
     5. JWT Secret Key
 
-* Run The Application
+* Run The Application With Your Terminal
 
     ```
         go run main.go
