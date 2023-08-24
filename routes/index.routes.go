@@ -16,7 +16,6 @@ func SetupEndpoint(r *fiber.App, jwtMiddleware fiber.Handler) {
 
 	//initiate the reservoir variable
 	userController := controllers.NewUserController()
-	s3Controller := controllers.NewS3Controller()
 
 	//user endpoint
 	//public endpoint
@@ -32,7 +31,4 @@ func SetupEndpoint(r *fiber.App, jwtMiddleware fiber.Handler) {
 	protected.Get("get/user/:id", userController.GetOneUserAccount) //endpoint to get one user data by objectid
 	protected.Put("put/user/update/:id", userController.UpdateUserInfo) //endpoint for update user data information by objectcid
 	protected.Delete("delete/user/remove/:id", userController.DeleteUserAccount) //endpoint to remove user data by objectid
-
-	//protected endpoint for s3 controller
-	protected.Post("post/file/upload", s3Controller.UploadFile) //endpoint to upload file to s3 bucket
 }

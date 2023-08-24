@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,7 +23,7 @@ func main() {
 
 	app := fiber.New() //initialize the server
 
-	app.Use(middleware.CORSMiddleware()) //use cors middleware from other directory
+	app.Use(middleware.CORSMiddleware()) //Use cors to allow permission for API Integration
 
 	database.ConnectDB() //connect to database
 	defer database.DisconnectDB() //disconnect from database
@@ -42,9 +43,12 @@ func main() {
 		})
 	})
 
+	host := config.ConfigHost()
 	port := config.ConfigPort()
 
-	err = app.Listen(":" + port)
+	fmt.Println("\nServer is running on", host + ":" + port)
+
+	err = app.Listen(host + ":" + port)
 	if err != nil {
 		log.Fatal(err)
 	}

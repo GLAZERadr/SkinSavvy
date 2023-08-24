@@ -1,21 +1,19 @@
-# Doculex AI 
-
-Doculex AI: your ultimate solution for efficient legal document management
+# Study Space API
 
 ## Introduction 
 
-Doculex AI is a web application that allows users to upload, store, and search for legal documents. The application is built using the Go Fiber framework and is hosted on AWS EC2 Virtual Private Server.
+Study Space is an application for users to rent/borrowing private working space for study. This API available for frontend side to fetch data from database and as authenticator.
 
 ## Installation Guides
 
 * Install Go 
 
-[Go Installation Link Here!](https://go.dev/doc/install)
+    [Go Installation Link Here!](https://go.dev/doc/install)
 
 * Clone This Repository
 
     ```
-        https://github.com/DataaAlchemist/Doculex-API.git
+    https://github.com/DataaAlchemist/StudySpace-API.git
     ```
 
 * Add Value To ".env.example" File >> Change ".env.example" To ".env"
@@ -29,7 +27,7 @@ Doculex AI is a web application that allows users to upload, store, and search f
 * Run The Application With Your Terminal
 
     ```
-        go run main.go
+    go run main.go
     ``` 
 
 ## API URL
@@ -52,8 +50,7 @@ Doculex AI is a web application that allows users to upload, store, and search f
 * Fiber - Backend Framework
 * MongoDB - Database
 * AWS EC2 - Hosting Platform
-* AWS S3 - Storage
-* Alibaba Cloud - LLM llama2
+* Docker - containerization
 * Github - Version Control
 * Postman - API Documentation
 

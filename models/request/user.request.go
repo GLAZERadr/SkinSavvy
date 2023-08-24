@@ -10,6 +10,7 @@ type UserRegister struct {
 	Name		string 		`json:"name"`
 	Email		string		`json:"email" gorm:"unique"`
 	Password	string		`json:"password"`
+	Handphone	int			`json:"phone_no"`
 	CreatedAt	time.Time	`json:"created"`
 	UpdatedAt	time.Time	`json:"updated"`
 }
