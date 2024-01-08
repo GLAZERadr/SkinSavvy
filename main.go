@@ -1,17 +1,21 @@
-package main 
+package main
 
 import (
+	"context"
 	"log"
-	"fmt"
 	"time"
 
+	firebase "firebase.google.com/go/v4"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"google.golang.org/api/option"
 
-	"github.com/Data-Alchemist/doculex-api/config"
-	"github.com/Data-Alchemist/doculex-api/database"
-	"github.com/Data-Alchemist/doculex-api/routes"
-	"github.com/Data-Alchemist/doculex-api/middleware"
+	"github.com/InnoFours/skin-savvy/auth"
+	"github.com/InnoFours/skin-savvy/config"
+	"github.com/InnoFours/skin-savvy/database"
+	"github.com/InnoFours/skin-savvy/middleware"
+	"github.com/InnoFours/skin-savvy/models/entity"
+	"github.com/InnoFours/skin-savvy/routes"
 )
 
 func main() {
@@ -21,34 +25,51 @@ func main() {
 	}
 	time.Local = location
 
-	app := fiber.New() //initialize the server
+	conn, err := database.ConnectDB()
+	if err != nil {
+		log.Fatal("Failed to connect with database")
+	}
+	defer conn.Close()
 
-	app.Use(middleware.CORSMiddleware()) //Use cors to allow permission for API Integration
+	opt := option.WithCredentialsFile("./service-account-key.json")
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		log.Fatalln("Error initializing app:", err)
+	}
 
-	database.ConnectDB() //connect to database
-	defer database.DisconnectDB() //disconnect from database
+	authClient, err := app.Auth(context.Background())
+	if err != nil {
+		log.Fatalln("Error getting Auth client: ", err)
+	}
 
-	app.Use(logger.New()) //add logger to track http request
-	
-	//add middleware
-	jwtMiddleware := middleware.JWTMiddleware()
+	conn.AutoMigrate(&entity.User{})
 
-	routes.SetupEndpoint(app, jwtMiddleware)
+	authService := &auth.AuthService{
+		DB			: conn,
+		FireAuth	: authClient,
+	}
 
-	//add setup handler for false routes
-	app.Use(func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "404 Not Found",
-			"status": fiber.StatusNotFound,
-		})
-	})
+	authToken := middleware.NewFireAuthMiddleware(authService)
+
+	server := fiber.New()
+
+	// server.Use(func(c *fiber.Ctx) error {
+	// 	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+	// 		"message": "404 Not Found",
+	// 		"status": fiber.StatusNotFound,
+	// 	})
+	// })
+
+	server.Use(logger.New())
+
+	server.Use(middleware.CORSMiddleware())
+
+	routes.SetupEndpoint(server, authService, authToken)
 
 	host := config.ConfigHost()
 	port := config.ConfigPort()
 
-	fmt.Println("\nServer is running on", host + ":" + port)
-
-	err = app.Listen(host + ":" + port)
+	err = server.Listen(host + ":" + port)
 	if err != nil {
 		log.Fatal(err)
 	}

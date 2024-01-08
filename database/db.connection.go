@@ -1,53 +1,17 @@
 package database
 
 import (
-	"fmt"
-	"log"
-	"context"
+	"github.com/InnoFours/skin-savvy/config"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-
-	"github.com/Data-Alchemist/doculex-api/config"
+	"github.com/jinzhu/gorm"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-var mongoClient *mongo.Client
-
-func ConnectDB() *mongo.Client {
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(config.ConfigDB()))
+func ConnectDB() (*gorm.DB, error) {
+	db, err := gorm.Open("mysql", config.ConfigDB())
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	err = client.Ping(context.Background(), nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Successfully Connected To Database...")
-
-	mongoClient = client
-
-	return client
-}
-
-func DisconnectDB() error {
-	err := mongoClient.Disconnect(context.Background())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Connection to Database is closed...")
-
-	return nil
-}
-
-func GetCollection(client *mongo.Client, name string) *mongo.Collection { // Mengubah nama fungsi menjadi GetCollection
-	coll := client.Database(config.ConfigDBname()).Collection(name)
-
-	return coll
-}
-
-func GetDB() *mongo.Client {
-	return mongoClient
+	return db, nil
 }

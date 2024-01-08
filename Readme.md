@@ -1,8 +1,6 @@
-# Study Space API
+# SkinSavvy API
 
 ## Introduction 
-
-Study Space is an application for users to rent/borrowing private working space for study. This API available for frontend side to fetch data from database and as authenticator.
 
 ## Installation Guides
 
@@ -12,17 +10,11 @@ Study Space is an application for users to rent/borrowing private working space 
 
 * Clone This Repository
 
-    ```
-    https://github.com/DataaAlchemist/StudySpace-API.git
-    ```
 
 * Add Value To ".env.example" File >> Change ".env.example" To ".env"
     You Must Add:
-    1. MongoDB URL
-    2. Database Name
-    3. Host
-    4. Port 
-    5. JWT Secret Key
+    1. Host
+    2. Port 
 
 * Run The Application With Your Terminal
 
@@ -36,11 +28,7 @@ Study Space is an application for users to rent/borrowing private working space 
 
 ## Project Support Features
 
-* Users can signup and login to their accounts
-
-* Public (non-authenticated) users can access all public encpoint on the platform
-
-* Authenticated users can access all protected endpoint.
+Users can get recommendation about skincare that suitable for their skin problem.
 
 ## API Documentation
 * User: [Click here for API documentation!](https://www.postman.com/api-documentation-tool/)
@@ -48,9 +36,8 @@ Study Space is an application for users to rent/borrowing private working space 
 ## Technologies Used
 * Golang - Backend Language
 * Fiber - Backend Framework
-* MongoDB - Database
-* AWS EC2 - Hosting Platform
-* Docker - containerization
+* Firebase - Authentication
+* MySQL - Database Management System
 * Github - Version Control
 * Postman - API Documentation
 
