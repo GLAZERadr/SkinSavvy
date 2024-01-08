@@ -22,16 +22,12 @@
     go run main.go
     ``` 
 
-## API URL
-
-[Link For API Integration](http://18.143.77.67:8000/)
-
 ## Project Support Features
 
 Users can get recommendation about skincare that suitable for their skin problem.
 
 ## API Documentation
-* User: [Click here for API documentation!](https://www.postman.com/api-documentation-tool/)
+* User: [Click here for API documentation!](https://documenter.getpostman.com/view/25551317/2s9YsJDDW3)
 
 ## Technologies Used
 * Golang - Backend Language
