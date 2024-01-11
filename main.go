@@ -6,9 +6,11 @@ import (
 	"time"
 
 	firebase "firebase.google.com/go/v4"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"google.golang.org/api/option"
+	
 
 	"github.com/InnoFours/skin-savvy/auth"
 	"github.com/InnoFours/skin-savvy/config"
@@ -37,7 +39,7 @@ func main() {
 		log.Fatalln("Error initializing app:", err)
 	}
 
-	authClient, err := app.Auth(context.Background())
+	firebaseAuth, err := app.Auth(context.Background())
 	if err != nil {
 		log.Fatalln("Error getting Auth client: ", err)
 	}
@@ -46,25 +48,23 @@ func main() {
 
 	authService := &auth.AuthService{
 		DB			: conn,
-		FireAuth	: authClient,
+		FireAuth	: firebaseAuth,
 	}
 
-	authToken := middleware.NewFireAuthMiddleware(authService)
-
 	server := fiber.New()
-
-	// server.Use(func(c *fiber.Ctx) error {
-	// 	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-	// 		"message": "404 Not Found",
-	// 		"status": fiber.StatusNotFound,
-	// 	})
-	// })
 
 	server.Use(logger.New())
 
 	server.Use(middleware.CORSMiddleware())
 
-	routes.SetupEndpoint(server, authService, authToken)
+	server.Use(func(c *fiber.Ctx) error {
+		c.Locals("firebaseAuth", firebaseAuth)
+		return c.Next()
+	})
+
+	routes.SetupEndpoint(server, authService)
+
+	// server.Use(middleware.TokenValidator)
 
 	host := config.ConfigHost()
 	port := config.ConfigPort()
