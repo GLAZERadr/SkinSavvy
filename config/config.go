@@ -34,19 +34,10 @@ func ConfigDB() string {
 }
 
 //function to take openai api key value from .env file
-func ConfigOpenAI() string {
+func ConfigGeminiKey() string {
 	err := godotenv.Load()
 	if err != nil {
 		panic("Error loading .env file")
 	}
-	return os.Getenv("OPENAI_API_KEY")
-}
-
-//function to take jwt key value from .env file
-func ConfigJWTkey() string {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
-	}
-	return os.Getenv("JWT_KEY")
+	return os.Getenv("GEMINI_API_KEY")
 }

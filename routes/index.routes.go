@@ -20,9 +20,10 @@ func SetupEndpoint(r *fiber.App, authService *auth.AuthService) {
 
 	//user endpoint
 	//public endpoint
-	r.Post("skinsavvy-api/v0.1/post/user/register", authController.UserRegister) //endpoint for user account register
-	r.Post("skinsavvy-api/v0.1/post/user/login", authController.Login) //endpoint for user account login
+	r.Post("/skinsavvy-api/v0.1/post/user/register", authController.UserRegister) //endpoint for user account register
+	r.Post("/skinsavvy-api/v0.1/post/user/login", authController.Login) //endpoint for user account login
 	r.Post("/skinsavvy-api/v0.1/post/predict", controllers.SkinDetection)
+	r.Post("/skinsavvy-api/v0.1/post/recommendation", controllers.SkincareRec)
 
 	// //protected method
 	// protected := r.Group("skinsavvy-api/v0.1/protected")

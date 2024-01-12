@@ -21,6 +21,7 @@ require (
 	cloud.google.com/go/storage v1.30.1 // indirect
 	dario.cat/mergo v1.0.0 // indirect
 	firebase.google.com/go/v4 v4.13.0 // indirect
+	github.com/Limit-LAB/go-gemini v0.0.6 // indirect
 	github.com/MicahParks/keyfunc v1.9.0 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/awalterschulze/gographviz v0.0.0-20190522210029-fa59802746ab // indirect
