@@ -15,7 +15,7 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 	model := onnx.NewModel(backend)
 
 	//read model files
-	b, _ := os.ReadFile("D:/Tech Projects/SkinSavvyApi/SkinSavvyAPI/mlModel/onnxModel/skin_problem_detection_model.onnx")
+	b, _ := os.ReadFile("mlModel/onnxModel/skin_problem_detection_model.onnx")
 	err := model.UnmarshalBinary(b)
 	if err != nil {
 		log.Fatal("Error opening model", err.Error())
@@ -29,10 +29,9 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 
 	backend.Run()
 
-    // get output tensors
+	// get output tensors
 	model.GetOutputTensors()
 
 	predictions := ProcessOutput(model.GetOutputTensors())
 	return predictions, nil
 }
-
