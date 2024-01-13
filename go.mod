@@ -21,6 +21,7 @@ require (
 	cloud.google.com/go/storage v1.30.1 // indirect
 	dario.cat/mergo v1.0.0 // indirect
 	firebase.google.com/go/v4 v4.13.0 // indirect
+	github.com/8ff/prettyTimer v0.0.0-20230830184900-c96793faf613 // indirect
 	github.com/Limit-LAB/go-gemini v0.0.6 // indirect
 	github.com/MicahParks/keyfunc v1.9.0 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
@@ -76,6 +77,7 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/xtgo/set v1.0.0 // indirect
+	github.com/yalue/onnxruntime_go v1.7.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/image v0.15.0 // indirect
