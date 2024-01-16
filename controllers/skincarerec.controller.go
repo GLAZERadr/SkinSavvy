@@ -6,6 +6,7 @@ import (
 
 	"github.com/InnoFours/skin-savvy/llm"
 	"github.com/InnoFours/skin-savvy/models/request"
+	"github.com/InnoFours/skin-savvy/sephoraScrape"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -15,19 +16,19 @@ func SkincareRec(c *fiber.Ctx) error {
 	if err := c.BodyParser(&req); err != nil {
 		log.Fatal("Failed to parse json body.")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "failed to parse question to gemini",
-			"status":  fiber.StatusInternalServerError,
-			"error":   err.Error(),
+			"message"	: "failed to parse question to gemini",
+			"status"	: fiber.StatusInternalServerError,
+			"error"		: err.Error(),
 		})
 	}
 
-	geminiResult, err := llm.GeminiClient(req.Question)
+	geminiResult, err := llm.GeminiClient(req.Question, req.Gender, req.Age, req.OutdoorAct)
 	if err != nil {
 		log.Fatal("Error processing question by gemini: ", err.Error())
 		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
-			"message": "can't process any question by gemini right now.",
-			"status":  fiber.StatusServiceUnavailable,
-			"error":   err.Error(),
+			"message"	: "can't process any question by gemini right now.",
+			"status"	: fiber.StatusServiceUnavailable,
+			"error"		: err.Error(),
 		})
 	}
 
@@ -48,9 +49,16 @@ func SkincareRec(c *fiber.Ctx) error {
 		}
 	}
 
+	details, err := sephoraScrape.ProductScraper(result)
+	if err != nil {
+		log.Fatal("Failed to scrape product", err.Error())
+	}
+
+	log.Println(result)
+
 	return c.JSON(fiber.Map{
-		"message":  "successfully processed question by Gemini.",
-		"status":   fiber.StatusOK,
-		"response": result,
+		"message"	: "successfully processed question by Gemini.",
+		"status"	: fiber.StatusOK,
+		"response"	: details,
 	})
 }
