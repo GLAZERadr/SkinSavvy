@@ -1,17 +1,24 @@
 package database
 
 import (
-	"github.com/InnoFours/skin-savvy/config"
+	"log"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/InnoFours/skin-savvy/config"
+	"github.com/InnoFours/skin-savvy/models/entity"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-func ConnectDB() (*gorm.DB, error) {
-	db, err := gorm.Open("mysql", config.ConfigDB())
-	if err != nil {
-		return nil, err
-	}
+var DB *gorm.DB
 
-	return db, nil
+func ConnectDB() {
+	var err error
+	DB, err = gorm.Open(mysql.Open(config.ConfigDB()), &gorm.Config{})
+	if err != nil {
+		log.Fatal("Error connecting to DB")
+	}
+	DB.AutoMigrate(&entity.User{})
+
+	log.Println("Database is up and running🫠")
 }

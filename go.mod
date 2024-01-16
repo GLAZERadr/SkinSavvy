@@ -58,6 +58,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.8.0 // indirect
 	github.com/jinzhu/gorm v1.9.16 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
@@ -109,4 +110,6 @@ require (
 	gorgonia.org/tensor v0.9.3 // indirect
 	gorgonia.org/vecf32 v0.9.0 // indirect
 	gorgonia.org/vecf64 v0.9.0 // indirect
+	gorm.io/driver/mysql v1.5.2 // indirect
+	gorm.io/gorm v1.25.5 // indirect
 )

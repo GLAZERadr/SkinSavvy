@@ -12,9 +12,11 @@
 
 
 * Add Value To ".env.example" File >> Change ".env.example" To ".env"
-    You Must Add:
+    You Must Add Value onto:
     1. Host
     2. Port 
+    3. Database URL
+    4. Gemini API Key
 
 * Run The Application With Your Terminal
 
@@ -33,6 +35,7 @@ Users can get recommendation about skincare that suitable for their skin problem
 * Golang - Backend Language
 * Fiber - Backend Framework
 * Firebase - Authentication
+* Gemini - Google MultiModal LLM
 * MySQL - Database Management System
 * Github - Version Control
 * Postman - API Documentation
