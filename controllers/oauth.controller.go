@@ -43,7 +43,6 @@ func OauthSignUp(c *fiber.Ctx) error {
 		})
 	}
 
-	log.Println("Fill user entity")
 	userData := entity.User{
 		ID			: uuid.New().String(),
 		Fullname	: googleUser.Name,
@@ -51,21 +50,15 @@ func OauthSignUp(c *fiber.Ctx) error {
 		Password	: "",
 		Photo		: googleUser.Picture,
 		CreatedAt	: time.Now(),
-		UpdatedAt	: time.Now(),
-	}
-	log.Println("user: ", userData)
-
-	log.Println("insert to db")
-
-	if err := database.DB.Model(&userData).Where("email = ?", strings.ToLower(googleUser.Email)).Updates(&userData).Error; err != nil {
-		log.Fatalf("Error updating user data: %v", err)
+		UpdatedAt	: time.Now() ,
 	}
 
-	if result := database.DB.Create(&userData); result.Error != nil {
-		log.Fatalf("Error creating user data: %v", result.Error)
-	}	
+	database.ConnectDB()
 
-	log.Println("take user entity from db")
+	if database.DB.Model(&userData).Where("email = ?", strings.ToLower(googleUser.Email)).Updates(&userData).RowsAffected == 0 {
+		database.DB.Create(&userData)
+	} 
+
 	var user entity.User
 	database.DB.First(&user, "email = ?", strings.ToLower(googleUser.Email))
 
