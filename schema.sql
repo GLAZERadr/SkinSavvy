@@ -1,12 +1,13 @@
 CREATE DATABASE SkinSavvy;
 USE SkinSavvy;
 
-SELECT * FROM users;
-
 CREATE TABLE users (
-	id VARCHAR(255) PRIMARY KEY,
-    email VARCHAR(255) UNIQUE,
-    fullname VARCHAR(255),
-    age INT,
-    password VARCHAR(255)
-)
+    id VARCHAR(36) PRIMARY KEY,
+    fullname VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    photo VARCHAR(255),
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
