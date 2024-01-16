@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 
-	"github.com/8ff/prettyTimer"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/InnoFours/skin-savvy/mlModel/modelHelper"
@@ -13,9 +12,19 @@ import (
 
 var blank []float32 
 
-func LoadModel(image io.Reader) (*fiber.Map, error) {
-	ts := prettyTimer.NewTimingStats()
+type SkinProblemPercentages struct {
+    Categories map[string]float32
+    Total     float32
+}
 
+func (spp *SkinProblemPercentages) CalculatePercentages() {
+    for category, confidence := range spp.Categories {
+        percentage := (confidence / spp.Total) * 100
+        spp.Categories[category] = percentage
+    }
+}
+
+func LoadModel(image io.Reader) (*fiber.Map, error) {
 	imageData, err := io.ReadAll(image)
 	if err != nil {
 		log.Fatal("error reading image: ", err.Error())
@@ -38,14 +47,10 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 		reader := bytes.NewReader(imageBuffer.Bytes())
 		input, imageWidth, imageHeight := modelHelper.InputPreparation(reader)
 
-		ts.Start()
-
 		output, err := modelHelper.Inference(modelSession, input)
 		if err != nil {
 			log.Fatal("error processing inference in model session: ", err.Error())
 		}
-
-		ts.Finish()
 
 		boxes := modelHelper.OutputProcessing(output, imageWidth, imageHeight)
 		for _, box := range boxes {
@@ -64,11 +69,23 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 			}
 
 			resultsArray = append(resultsArray, results)
-
-			// log.Printf("Object: %s Confidence: %.2f Coordinates: (%f, %f), (%f, %f)", objectName, confidence, x1, y1, x2, y2)
 		}
 	}
-	ts.PrintStats()
 
-	return &fiber.Map{"predictions": resultsArray}, nil
+	percentages := SkinProblemPercentages{
+		Categories	: make(map[string]float32),
+		Total		: 0,
+	}
+
+	for _, result := range resultsArray {
+		name := result["name"].(string)
+		confidence := result["confidence"].(float32)
+
+		percentages.Categories[name] += confidence
+		percentages.Total += confidence
+	}
+
+	percentages.CalculatePercentages()
+	
+	return &fiber.Map{"summary": percentages.Categories, "details": resultsArray}, nil
 }

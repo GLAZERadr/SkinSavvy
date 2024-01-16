@@ -40,11 +40,13 @@ func ProductScraper(geminiResponse []string) (*fiber.Map, error) {
 	var productDetailsMap []entity.ProductDetails
 
 	i := 0
+	log.Println("Scraping Process")
 	for _, products := range listOfProduct {
 		log.Println("Process", i)
 
 		var productNodes []*cdp.Node
 
+		log.Println("Process scrape link of product")
 		err := chromedp.Run(ctx,
 			chromedp.Navigate("https://www.sephora.com/search?keyword="+products),
 			chromedp.Sleep(2000*time.Millisecond),
@@ -65,6 +67,7 @@ func ProductScraper(geminiResponse []string) (*fiber.Map, error) {
 			}
 		}
 
+		log.Println("Process scrape attribute of product")
 		for _, link := range productLinks {
 			var (
 				Brand    	string
@@ -72,6 +75,7 @@ func ProductScraper(geminiResponse []string) (*fiber.Map, error) {
 				Price    	string
 				Quantity 	string
 				Explanation string 
+				ImageAttr []map[string]string
 			)
 
 			for _, entry := range geminiResponse {
@@ -92,20 +96,25 @@ func ProductScraper(geminiResponse []string) (*fiber.Map, error) {
 				chromedp.Text(".css-1v7u6og.eanm77i0>div>h1>span", &Name),
 				chromedp.Text(".css-1v7u6og.eanm77i0>div>div>p>span>span>b", &Price),
 				chromedp.Text(".css-1v7u6og.eanm77i0>div>.css-1jp3h9y>.css-k1zwuw>.css-1ag3xrp>.css-0>span", &Quantity),
+				chromedp.AttributesAll(".css-1v7u6og.eanm77i0 > .css-v7bl16 > .css-1a2dflv.eanm77i0 > .css-wzxd08 > .css-3c349a > ul > li > .css-122y91a > .css-aaj5ah > button > picture > source", &ImageAttr),
 			)
-
 			if err != nil {
 				log.Fatal("Error scraping information of the product: ", err.Error())
 			}
+
+			imageUrls := strings.Split(ImageAttr[0]["srcset"], ",")[0]
+			imageUrl := imageUrls[:len(imageUrls)-3] + "0"
 
 			productDetails := entity.ProductDetails{
 				Brand		: Brand,
 				Name		: Name,
 				Price   	: Price,
 				URL     	: link,
+				ImageURL	: imageUrl,
 				Quantity	: Quantity,
 				Explanation	: Explanation ,
 			}	
+
 
 			productDetailsMap = append(productDetailsMap, productDetails)
 
@@ -114,6 +123,7 @@ func ProductScraper(geminiResponse []string) (*fiber.Map, error) {
 			log.Println("Product Price:", Price)
 			log.Println("Product Quantity:", Quantity)
 			log.Println("Product Link:", link)
+			log.Println("Product Image:", imageUrl)
 			log.Println("Explanation:", Explanation)
 			log.Println("========================================================================================================")
 		}

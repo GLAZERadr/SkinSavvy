@@ -49,12 +49,12 @@ func SkincareRec(c *fiber.Ctx) error {
 		}
 	}
 
+	log.Println(result)
+	
 	details, err := sephoraScrape.ProductScraper(result)
 	if err != nil {
 		log.Fatal("Failed to scrape product", err.Error())
 	}
-
-	log.Println(result)
 
 	return c.JSON(fiber.Map{
 		"message"	: "successfully processed question by Gemini.",

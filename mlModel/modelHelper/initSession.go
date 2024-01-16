@@ -3,6 +3,7 @@ package modelHelper
 import (
 	"log"
 	"runtime"
+	"sync"
 
 	ort "github.com/yalue/onnxruntime_go"
 )
@@ -13,11 +14,21 @@ type ModelSession struct {
 	Output 	*ort.Tensor[float32]
 }
 
+var once sync.Once
+var isInit bool
+
 func InitSession(blank []float32) (ModelSession, error) {
-	ort.SetSharedLibraryPath(getSharedLibPath())
-	err := ort.InitializeEnvironment()
-	if err != nil {
-		log.Fatal("error initialize environment for onnx runtime: ", err.Error())
+	once.Do(func(){
+		ort.SetSharedLibraryPath(getSharedLibPath())
+		err := ort.InitializeEnvironment()
+		if err != nil {
+			log.Fatal("error initialize environment for onnx runtime: ", err.Error())
+		}
+		isInit = true
+	})
+
+	if !isInit {
+		log.Fatal("error initialize environment for onnx runtime: The onnxruntime has already been initialized")
 	}
 
 	inputShape := ort.NewShape(1, 3, 640, 640)
