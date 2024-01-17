@@ -65,3 +65,11 @@ func ConfigGoogleOauthRedirectUrl() string {
 	}
 	return os.Getenv("GOOGLE_OAUTH_REDIRECT_URL")
 }
+
+func ConfigFirebaseProjectId() string {
+	err := godotenv.Load()
+	if err != nil {
+		panic("Error loading .env file")
+	}
+	return os.Getenv("FIREBASE_PROJECT_ID")
+}
