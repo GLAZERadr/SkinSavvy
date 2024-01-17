@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/InnoFours/skin-savvy/llm"
+	"github.com/InnoFours/skin-savvy/google/llm"
 	"github.com/InnoFours/skin-savvy/models/request"
 	"github.com/InnoFours/skin-savvy/sephoraScrape"
 	"github.com/gofiber/fiber/v2"

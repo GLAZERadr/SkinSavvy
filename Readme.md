@@ -15,8 +15,10 @@
     You Must Add Value onto:
     1. Host
     2. Port 
-    3. Database URL
+    3. Firebase Project ID
     4. Gemini API Key
+    5. Firebase Service Account Key (must be a json file and the path is on root directory)
+    6. Google Oauth Credentials (Client ID, Client Secret, Redirect Urls)
 
 * Run The Application With Your Terminal
 
