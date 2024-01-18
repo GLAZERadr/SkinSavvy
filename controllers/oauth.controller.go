@@ -120,7 +120,7 @@ func OauthSignUp(c *fiber.Ctx) error {
     } else {
         _, err := client.Collection("skinsavvy-user").Doc(userData.ID).Set(context.Background(), userData)
         if err != nil {
-            log.Fatal("failed adding user to Firestore: ", err.Error())
+            log.Fatal("failed adding user to firestore: ", err.Error())
             return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
                 "message": "failed adding new user",
                 "status":  fiber.StatusInternalServerError,

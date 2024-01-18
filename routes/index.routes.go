@@ -3,7 +3,6 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 
-	// "github.com/InnoFours/skin-savvy/auth"
 	"github.com/InnoFours/skin-savvy/controllers"
 )
 
@@ -21,6 +20,9 @@ func SetupEndpoint(r *fiber.App) {
 	//public endpoint
 	skinsavvy.Post("post/predict", controllers.SkinDetection)
 	skinsavvy.Post("post/recommendation", controllers.SkincareRec)
+	skinsavvy.Post("post/used-product", controllers.AddUsageProduct)
+
 	skinsavvy.Get("sessions/oauth/google", controllers.OauthSignUp)
 	skinsavvy.Get("get/all-users", controllers.GetAllUser)
+	skinsavvy.Get("get/used-product/:id", controllers.GetUserUsedProduct)
 }
