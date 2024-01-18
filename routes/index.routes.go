@@ -11,7 +11,7 @@ func SetupEndpoint(r *fiber.App) {
 	r.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"message": "Welcome to SkinSavvy Beta Version 1.0 Public API👍",
-			"status": fiber.StatusOK,
+			"status":  fiber.StatusOK,
 		})
 	})
 
@@ -20,9 +20,7 @@ func SetupEndpoint(r *fiber.App) {
 	//public endpoint
 	skinsavvy.Post("post/predict", controllers.SkinDetection)
 	skinsavvy.Post("post/recommendation", controllers.SkincareRec)
-	skinsavvy.Post("post/used-product", controllers.AddUsageProduct)
-
-	skinsavvy.Get("sessions/oauth/google", controllers.OauthSignUp)
+	skinsavvy.Post("sessions/oauth/google", controllers.OauthSignUp)
 	skinsavvy.Get("get/all-users", controllers.GetAllUser)
 	skinsavvy.Get("get/used-product/:id", controllers.GetUserUsedProduct)
 }
