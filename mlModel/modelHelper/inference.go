@@ -9,7 +9,7 @@ func Inference(modelSession ModelSession, input []float32) ([]float32, error) {
 	copy(inputTensor, input)
 	err := modelSession.Session.Run()
 	if err != nil {
-		log.Fatal("error on inference process: ", err.Error())
+		log.Println("error on inference process: ", err.Error())
 	}
 
 	return modelSession.Output.GetData(), nil

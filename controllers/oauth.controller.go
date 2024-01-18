@@ -24,7 +24,7 @@ func OauthSignUp(c *fiber.Ctx) error {
 	var request map[string]interface{}
 
 	if err := c.BodyParser(&request); err != nil {
-		log.Fatal("error parsing request body: ", err.Error())
+		log.Println("error parsing request body: ", err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "error parsing request body",
 			"status":  fiber.StatusBadRequest,
@@ -50,7 +50,7 @@ func OauthSignUp(c *fiber.Ctx) error {
 
 	googleUser, err := middleware.GetGoogleUser(tokenRes.AccessToken, tokenRes.IdToken)
 	if err != nil {
-		log.Fatal("error acquire user details: ", err.Error())
+		log.Println("error acquire user details: ", err.Error())
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{
 			"message": "failed to retrieve user information from Google",
 			"status":  fiber.StatusBadGateway,
@@ -70,7 +70,7 @@ func OauthSignUp(c *fiber.Ctx) error {
 
 	client, err := database.FirestoreConnection()
 	if err != nil {
-		log.Fatal("error connecting to firestore", err.Error())
+		log.Println("error connecting to firestore", err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "error connecting to firestore",
 			"status":  fiber.StatusBadRequest,
@@ -87,7 +87,7 @@ func OauthSignUp(c *fiber.Ctx) error {
 			break
 		}
 		if err != nil {
-			log.Fatalf("Failed to iterate the list of users: %v", err)
+			log.Println("Failed to iterate the list of users: ", err)
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": "failed to get all users",
 				"status":  fiber.StatusInternalServerError,
@@ -123,7 +123,7 @@ func OauthSignUp(c *fiber.Ctx) error {
 	if userExists {
 		_, err := client.Collection("skinsavvy-user").Doc(existingUser.ID).Set(context.Background(), userData)
 		if err != nil {
-			log.Fatal("failed updating user in Firestore: ", err.Error())
+			log.Println("failed updating user in Firestore: ", err.Error())
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": "failed updating user",
 				"status":  fiber.StatusInternalServerError,
@@ -133,7 +133,7 @@ func OauthSignUp(c *fiber.Ctx) error {
 	} else {
 		_, err := client.Collection("skinsavvy-user").Doc(userData.ID).Set(context.Background(), userData)
 		if err != nil {
-			log.Fatal("failed adding user to Firestore: ", err.Error())
+			log.Println("failed adding user to Firestore: ", err.Error())
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": "failed adding new user",
 				"status":  fiber.StatusInternalServerError,

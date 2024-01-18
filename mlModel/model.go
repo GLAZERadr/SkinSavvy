@@ -27,7 +27,7 @@ func (spp *SkinProblemPercentages) CalculatePercentages() {
 func LoadModel(image io.Reader) (*fiber.Map, error) {
 	imageData, err := io.ReadAll(image)
 	if err != nil {
-		log.Fatal("error reading image: ", err.Error())
+		log.Println("error reading image: ", err.Error())
 	}
 
 	imageBuffer := bytes.NewBuffer(imageData)
@@ -38,7 +38,7 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 
 	modelSession, err := modelHelper.InitSession(blank)
 	if err != nil {
-		log.Fatal("error make prediction session: ", err.Error())
+		log.Println("error make prediction session: ", err.Error())
 	}
 
 	var resultsArray []fiber.Map
@@ -49,7 +49,7 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 
 		output, err := modelHelper.Inference(modelSession, input)
 		if err != nil {
-			log.Fatal("error processing inference in model session: ", err.Error())
+			log.Println("error processing inference in model session: ", err.Error())
 		}
 
 		boxes := modelHelper.OutputProcessing(output, imageWidth, imageHeight)

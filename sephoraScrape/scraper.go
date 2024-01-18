@@ -53,7 +53,7 @@ func ProductScraper(geminiResponse []string) (*fiber.Map, error) {
 			chromedp.Nodes(".css-1322gsb .css-foh208 .css-h5rga0.eanm77i0:first-child > a", &productNodes, chromedp.ByQuery),
 		)
 		if err != nil {
-			log.Fatal("Can't open website: ", err.Error())
+			log.Println("Can't open website: ", err.Error())
 		}
 
 		var productLinks []string
@@ -99,7 +99,7 @@ func ProductScraper(geminiResponse []string) (*fiber.Map, error) {
 				chromedp.AttributesAll(".css-1v7u6og.eanm77i0 > .css-v7bl16 > .css-1a2dflv.eanm77i0 > .css-wzxd08 > .css-3c349a > ul > li > .css-122y91a > .css-aaj5ah > button > picture > source", &ImageAttr),
 			)
 			if err != nil {
-				log.Fatal("Error scraping information of the product: ", err.Error())
+				log.Println("Error scraping information of the product: ", err.Error())
 			}
 
 			imageUrls := strings.Split(ImageAttr[0]["srcset"], ",")[0]

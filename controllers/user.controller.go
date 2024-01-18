@@ -15,7 +15,7 @@ import (
 func GetAllUser(c *fiber.Ctx) error {
 	client, err := database.FirestoreConnection()
 	if err != nil {
-		log.Fatal("error connecting to firestore", err.Error())
+		log.Println("error connecting to firestore", err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message"	: "error connecting to firestore",
 			"status"	: fiber.StatusBadRequest,
@@ -32,7 +32,7 @@ func GetAllUser(c *fiber.Ctx) error {
 			break
 		}
 		if err != nil {
-			log.Fatalf("Failed to iterate the list of posts: %v", err)
+			log.Println("Failed to iterate the list of posts: ", err)
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"message"	: "failed to get all users",
 				"status"	: fiber.StatusInternalServerError,

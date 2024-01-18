@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"log"
 	"crypto/sha256"
 	"encoding/hex"
 
@@ -10,7 +11,7 @@ import (
 func PasswordHashing(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return "", err
+		log.Println("error hashing password", err.Error())
 	}
 
 	return string(hash), nil

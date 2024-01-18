@@ -11,7 +11,7 @@ import (
 func InputPreparation(imageBuffer io.Reader) ([]float32, int64, int64){
 	imageObject, err := jpeg.Decode(imageBuffer)
 	if err != nil {
-		log.Fatal("Cannot decode image")
+		log.Println("Cannot decode image")
 	}
 
 	imageSize := imageObject.Bounds().Size()

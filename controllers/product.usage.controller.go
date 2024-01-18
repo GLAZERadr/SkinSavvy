@@ -53,7 +53,7 @@ func AddUsageProduct(c *fiber.Ctx) error {
             break
         }
         if err != nil {
-            log.Fatalf("Failed to iterate the list of users: %v", err)
+            log.Println("Failed to iterate the list of users: ", err.Error())
             return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
                 "message": "failed to get all users",
                 "status":  fiber.StatusInternalServerError,
@@ -134,7 +134,7 @@ func GetUserUsedProduct(c *fiber.Ctx) error {
             break
         }
         if err != nil {
-            log.Fatalf("Failed to iterate the list of users: %v", err)
+            log.Println("Failed to iterate the list of users: ", err)
             return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
                 "message": "failed to get all users",
                 "status":  fiber.StatusInternalServerError,

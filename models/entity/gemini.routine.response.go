@@ -1,8 +1,8 @@
 package entity
 
+import "time"
+
 type RoutineResponse struct {
-	Day      		string   `json:"day"`
-	Date     		string   `json:"date"`
-	Product  		[]string `json:"product"`
-	Explanation   	string   `json:"explanation"`
+	Date     		time.Time   `json:"date"`
+	Product  		string `json:"product"`
 }

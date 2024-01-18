@@ -15,7 +15,7 @@ import (
 func main() {
 	location, err := time.LoadLocation("Asia/Jakarta")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	time.Local = location
 

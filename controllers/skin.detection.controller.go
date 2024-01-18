@@ -10,7 +10,7 @@ import (
 func SkinDetection(c *fiber.Ctx) error {
 	image, err := c.FormFile("image")
 	if err != nil {
-		log.Fatal("Can't parse image", err.Error())
+		log.Println("Can't parse image", err.Error())
 		return c.Status(fiber.StatusNotAcceptable).JSON(fiber.Map{
 			"message"	: "Can't parse the image",
 			"status"	: fiber.StatusNotAcceptable,
@@ -20,7 +20,7 @@ func SkinDetection(c *fiber.Ctx) error {
 
 	imageFile, err := image.Open()
 	if err != nil {
-		log.Fatal("Can't open image", err.Error())
+		log.Println("Can't open image", err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message"	: "Can't open the image",
 			"status"	: fiber.StatusInternalServerError,

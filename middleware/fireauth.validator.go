@@ -19,7 +19,7 @@ func TokenValidator(c *fiber.Ctx) error {
 	log.Println("authToken: ", authToken)
 
 	if idToken == "" {
-		log.Fatal("Required authorization token")
+		log.Println("Required authorization token")
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message"	: "Authorization token is included",
 			"status"	: fiber.StatusUnauthorized,

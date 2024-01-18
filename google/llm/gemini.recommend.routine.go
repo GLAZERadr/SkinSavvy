@@ -36,14 +36,15 @@ func GeminiRoutineRecommender(products []string, targetDays int, age int, skinPr
 					`. Note that you must give the skincare routine for the patients and never say to consult a dermatologist or skincare professional for personalized advice tailored to your unique skin needs.
 			
 					Output format:
-
-					[date]: [products]`)),
+					date:product
+					
+					Note: do not generate format other than this reserved format, don't make an empty new line`)),
 			
 		),
 	)
 
 	if err != nil {
-		log.Fatal("Failed connecting with gemini model: ", err.Error())
+		log.Println("Failed connecting with gemini model: ", err.Error())
 	}
 
 	response := GeminiResult{
@@ -52,6 +53,5 @@ func GeminiRoutineRecommender(products []string, targetDays int, age int, skinPr
 		},
 	}
 
-	log.Println(response)
 	return &response, nil
 }

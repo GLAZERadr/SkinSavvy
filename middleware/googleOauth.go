@@ -43,7 +43,7 @@ func GetGoogleOauthToken(code string) (*GoogleOauthToken, error) {
 
 	req, err := http.NewRequest("POST", rootUrl, bytes.NewBufferString(query))
 	if err != nil {
-		log.Fatal("error making request on oauth: ", err.Error())
+		log.Println("error making request on oauth: ", err.Error())
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -53,23 +53,23 @@ func GetGoogleOauthToken(code string) (*GoogleOauthToken, error) {
 
 	res, err := client.Do(req)
 	if err != nil {
-		log.Fatal("error making requeest on client: ", err.Error())
+		log.Println("error making requeest on client: ", err.Error())
 	}
 
 	if res.StatusCode != http.StatusOK {
-		log.Fatal("can't retrieve any token")
+		log.Println("can't retrieve any token")
 	}
 
 	var resBody bytes.Buffer
 	_,err = io.Copy(&resBody, res.Body)
 	if err != nil {
-		log.Fatal("can't copy response body of oauth token")
+		log.Println("can't copy response body of oauth token")
 	}
 
 	var GoogleOauthTokenRes map[string]interface{}
 
 	if err := json.Unmarshal(resBody.Bytes(), &GoogleOauthTokenRes); err != nil {
-		log.Fatal("can't unmarshal json body of google oauth token: ", err.Error())
+		log.Println("can't unmarshal json body of google oauth token: ", err.Error())
 	}
 
 	tokenBody := &GoogleOauthToken{
@@ -85,7 +85,7 @@ func GetGoogleUser(accessToken string, idToken string) (*GoogleUserResult, error
 
 	req, err := http.NewRequest("GET", rootUrl, nil)
 	if err != nil {
-		log.Fatal("can't make a request on google api oath: ", err.Error())
+		log.Println("can't make a request on google api oath: ", err.Error())
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf("BEARER %s", idToken))
@@ -96,23 +96,23 @@ func GetGoogleUser(accessToken string, idToken string) (*GoogleUserResult, error
 
 	res, err := client.Do(req)
 	if err != nil {
-		log.Fatal("can't make an authorize request: ", err.Error())
+		log.Println("can't make an authorize request: ", err.Error())
 	}
 
 	if res.StatusCode != http.StatusOK {
-		log.Fatal("error on status code", err.Error())
+		log.Println("error on status code", err.Error())
 	}
 
 	var resBody bytes.Buffer
 	_,err = io.Copy(&resBody, res.Body)
 	if err != nil {
-		log.Fatal("can't copy response body of oauth token")
+		log.Println("can't copy response body of oauth token")
 	}
 
 	var GoogleUserRes map[string]interface{}
 
 	if err := json.Unmarshal(resBody.Bytes(), &GoogleUserRes); err != nil {
-		log.Fatal("can't unmarshal json body of google oauth token: ", err.Error())
+		log.Println("can't unmarshal json body of google oauth token: ", err.Error())
 	}
 
 	userBody := &GoogleUserResult{

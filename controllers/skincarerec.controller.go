@@ -14,7 +14,7 @@ func SkincareRec(c *fiber.Ctx) error {
 	var req request.GeminiProductRecRequest
 
 	if err := c.BodyParser(&req); err != nil {
-		log.Fatal("Failed to parse json body.")
+		log.Println("Failed to parse json body.")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message"	: "failed to parse question to gemini",
 			"status"	: fiber.StatusInternalServerError,
@@ -24,7 +24,7 @@ func SkincareRec(c *fiber.Ctx) error {
 
 	geminiResult, err := llm.GeminiProductRecommender(req.Question, req.Gender, req.Age, req.OutdoorAct)
 	if err != nil {
-		log.Fatal("Error processing question by gemini: ", err.Error())
+		log.Println("Error processing question by gemini: ", err.Error())
 		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
 			"message"	: "can't process any question by gemini right now.",
 			"status"	: fiber.StatusServiceUnavailable,

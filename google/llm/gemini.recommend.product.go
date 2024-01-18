@@ -26,7 +26,7 @@ func GeminiProductRecommender(promptCompletion string, gender string, age int, o
 	)
 
 	if err != nil {
-		log.Fatal("Failed connecting with gemini model: ", err.Error())
+		log.Println("Failed connecting with gemini model: ", err.Error())
 	}
 
 	response := GeminiResult{
