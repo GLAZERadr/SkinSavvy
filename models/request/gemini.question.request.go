@@ -1,6 +1,6 @@
 package request
 
-type GeminiRequest struct {
+type GeminiProductRecRequest struct {
 	Question	string	`json:"question"`
 	Gender		string	`json:"gender"`
 	Age			int		`json:"age"`

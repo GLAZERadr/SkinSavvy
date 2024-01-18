@@ -19,8 +19,12 @@ func SetupEndpoint(r *fiber.App) {
 
 	//public endpoint
 	skinsavvy.Post("post/predict", controllers.SkinDetection)
+
+	//google request
 	skinsavvy.Post("post/recommendation", controllers.SkincareRec)
 	skinsavvy.Post("sessions/oauth/google", controllers.OauthSignUp)
+	skinsavvy.Post("post/routine-recommendation", controllers.SkincareRoutine)
+
 	skinsavvy.Get("get/all-users", controllers.GetAllUser)
 	skinsavvy.Get("get/used-product/:id", controllers.GetUserUsedProduct)
 }

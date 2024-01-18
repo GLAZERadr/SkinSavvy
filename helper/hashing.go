@@ -23,9 +23,9 @@ func HashEmail(email string) string {
 	return hex.EncodeToString(hashBytes)
 }
 
-func HashProductUsage(user string, product string) string {
+func HashProductUsage(brand string, product string) string {
 	hasher := sha256.New()
-	combinedString := user + product
+	combinedString := brand + product
 	hasher.Write([]byte(combinedString))
 	hashBytes := hasher.Sum(nil)
 	return hex.EncodeToString(hashBytes)

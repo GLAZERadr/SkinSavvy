@@ -31,14 +31,17 @@
 Users can get recommendation about skincare that suitable for their skin problem.
 
 ## API Documentation
+
 * User: [Click here for API documentation!](https://documenter.getpostman.com/view/25551317/2s9YsJDDW3)
 
 ## Technologies Used
 * Golang - Backend Language
+* onnx - Runtime for model serving
 * Fiber - Backend Framework
-* Firebase - Authentication
+* Firebase - firestore as database
+* Google OAUTH - Authentication using google account
+* Google Cloud Platform (Cloud Storage) - blob storage
 * Gemini - Google MultiModal LLM
-* MySQL - Database Management System
 * Github - Version Control
 * Postman - API Documentation
 
