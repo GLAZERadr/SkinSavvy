@@ -10,18 +10,33 @@ import (
 	"github.com/InnoFours/skin-savvy/mlModel/modelHelper"
 )
 
-var blank []float32 
+var blank []float32
 
 type SkinProblemPercentages struct {
-    Categories map[string]float32
-    Total     float32
+	Categories map[string]float32
+	Total      float32
 }
 
-func (spp *SkinProblemPercentages) CalculatePercentages() {
-    for category, confidence := range spp.Categories {
-        percentage := (confidence / spp.Total) * 100
-        spp.Categories[category] = percentage
-    }
+type SkinProblem struct {
+	Name       string `json:"name"`
+	Percentage int    `json:"percentage"`
+}
+
+func CalculatePercentages(spp SkinProblemPercentages) []SkinProblem {
+	results := []SkinProblem{}
+	var percentage int = 0
+
+	for category, confidence := range spp.Categories {
+		percentage = int((confidence / spp.Total) * 100)
+
+		skinProblem := SkinProblem{
+			Name:       category,
+			Percentage: percentage,
+		}
+		results = append(results, skinProblem)
+	}
+
+	return results
 }
 
 func LoadModel(image io.Reader) (*fiber.Map, error) {
@@ -62,10 +77,10 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 			y2 := box[3].(float64)
 
 			results := fiber.Map{
-				"name":    objectName,
+				"name":       objectName,
 				"confidence": confidence,
-				"coords":   []fiber.Map{{"x1": x1, "y1": y1}, 
-										{"x2": x2, "y2": y2}},
+				"coords": []fiber.Map{{"x1": x1, "y1": y1},
+					{"x2": x2, "y2": y2}},
 			}
 
 			resultsArray = append(resultsArray, results)
@@ -73,8 +88,8 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 	}
 
 	percentages := SkinProblemPercentages{
-		Categories	: make(map[string]float32),
-		Total		: 0,
+		Categories: make(map[string]float32),
+		Total:      0,
 	}
 
 	for _, result := range resultsArray {
@@ -85,7 +100,7 @@ func LoadModel(image io.Reader) (*fiber.Map, error) {
 		percentages.Total += confidence
 	}
 
-	percentages.CalculatePercentages()
-	
-	return &fiber.Map{"summary": percentages.Categories, "details": resultsArray}, nil
+	summary := CalculatePercentages(percentages)
+
+	return &fiber.Map{"summary": summary, "details": resultsArray}, nil
 }
